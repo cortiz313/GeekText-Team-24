@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-//import { ratingSchema } from "./ratingModel.js";
-//import { commentSchema } from "./commentModel.js";
+import { ratingSchema } from "./ratingModel.js";
+import { commentSchema } from "./commentModel.js";
 
 const bookSchema = mongoose.Schema(
   {
@@ -50,8 +50,8 @@ const bookSchema = mongoose.Schema(
       required: true,
     },
 
-    //comments: [commentSchema],
-    //ratings: [ratingSchema],
+    comments: [commentSchema],
+    ratings: [ratingSchema],
   },
   {
     timestamps: true,
@@ -59,4 +59,4 @@ const bookSchema = mongoose.Schema(
 );
 
 const Book = mongoose.model("Book", bookSchema);
-export { Book };
+export { Book, bookSchema };
