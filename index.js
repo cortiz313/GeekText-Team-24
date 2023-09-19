@@ -4,9 +4,9 @@ import express from "express";
 const PORT = process.env.PORT || 5000;
 const mongoDBURL = process.env.MONGODB_URL;
 import mongoose from "mongoose";
-import { Book } from "./models/bookModel.js";
 import booksRouter from "./routes/booksRouter.js";
 
+// Create express app
 const app = express();
 
 // Used to parse JSON from body
@@ -19,11 +19,12 @@ app.get("/", (req, res) => {
   console.log(req.headers);
   return res.status(234).send("Hello World");
 });
-
 /////////////////////////////////////////////////////////////
 // Router to handle books
 app.use("/books", booksRouter);
 
+/////////////////////////////////////////////////////////////
+// Connect to MongoDB
 mongoose
   .connect(mongoDBURL)
   .then(() => {
