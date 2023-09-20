@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 const mongoDBURL = process.env.MONGODB_URL;
 import mongoose from "mongoose";
 import booksRouter from "./routes/booksRouter.js";
@@ -22,7 +22,6 @@ app.get("/", (req, res) => {
 /////////////////////////////////////////////////////////////
 // Router to handle books
 app.use("/books", booksRouter);
-
 /////////////////////////////////////////////////////////////
 // Connect to MongoDB
 mongoose
