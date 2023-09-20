@@ -10,7 +10,7 @@ const bookSchema = mongoose.Schema(
     },
     author: {
       type: String,
-      required: true,
+      required: true, // use schema
     },
     genre: {
       type: String,
