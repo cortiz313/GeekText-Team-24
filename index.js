@@ -4,7 +4,7 @@ import express from "express";
 const PORT = process.env.PORT || 5000;
 const mongoDBURL = process.env.MONGODB_URL;
 import mongoose from "mongoose";
-import booksRouter from "./routes/booksRouter.js";
+import booksRouter from "./routes/booksDetailsController";
 
 // Create express app
 const app = express();
