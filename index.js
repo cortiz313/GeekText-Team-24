@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 5000;
 const mongoDBURL = process.env.MONGODB_URL;
 import mongoose from "mongoose";
 import booksRouter from "./routes/booksDetailsController";
+import userRouter from"./routes/userRouter";
 
 // Create express app
 const app = express();
@@ -23,6 +24,10 @@ app.get("/", (req, res) => {
 // Router to handle books
 app.use("/books", booksRouter);
 
+//////////////////////////////////////////////////////////
+// Router to handle users
+app.use("/users", userRouter);
+
 /////////////////////////////////////////////////////////////
 // Connect to MongoDB
 mongoose
@@ -37,3 +42,4 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+ 
