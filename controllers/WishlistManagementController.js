@@ -2,14 +2,15 @@ import mongoose from "mongoose";
 import express from "express";
 import { User } from "./models/userModel.js";
 import { Book } from "../models/bookModel.js";
-import { Wishlist } from "../models/wishlistModel.js";
+import { Wishlist, wishlistSchema } from "../models/wishlistModel.js";
 import error from "mongoose/lib/error/index.js";
 
 const WishlistController = express.Router();
 //Feature 6.1: Create Wishlist for a user with unique name
 
 WishlistController.post('/createWishlist', async (req, res) => {
-    const createWishlist = {
+    
+    newWishlist = {
         "name" : String,
         "username" : String
     }
