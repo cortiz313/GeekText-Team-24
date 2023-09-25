@@ -5,9 +5,12 @@ const PORT = process.env.PORT;
 const mongoDBURL = process.env.MONGODB_URL;
 import mongoose from "mongoose";
 import booksRouter from "./routes/booksRouter.js";
+import BookBrowsingController from "./controllers/bookBrowsingController.js";
 
 // Create express app
 const app = express();
+
+// Middleware
 
 // Used to parse JSON from body
 app.use(express.json());
@@ -20,9 +23,15 @@ app.get("/", (req, res) => {
   return res.status(234).send("Hello World");
 });
 /////////////////////////////////////////////////////////////
+
 // Router to handle books
 app.use("/books", booksRouter);
 /////////////////////////////////////////////////////////////
+
+// Router to get books by genre
+app.use("/browsing", BookBrowsingController);
+/////////////////////////////////////////////////////////////
+
 // Connect to MongoDB
 mongoose
   .connect(mongoDBURL)
