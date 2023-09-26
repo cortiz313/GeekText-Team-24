@@ -2,10 +2,10 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 const PORT = process.env.PORT;
-const mongoDBURL = process.env.MONGODB_URL;
+const mongoDBURL = "mongodb+srv://justinr:dUj4ckiX26ARCyG4@geektext-team-24.zgqn2ve.mongodb.net/?retryWrites=true&w=majority";
 import mongoose from "mongoose";
-import booksRouter from "./routes/booksDetailsController";
-import userRouter from "./routes/userRouter";
+import booksRouter from "./routes/booksRouter.js";
+import BookDetailsController from "./controllers/BookDetailsController.js";
 
 // Create express app
 const app = express();
@@ -21,13 +21,17 @@ app.get("/", (req, res) => {
   return res.status(234).send("Hello World");
 });
 /////////////////////////////////////////////////////////////
-// Router to handle books
-app.use("/books", booksRouter);
 
-//////////////////////////////////////////////////////////
-// Router to handle users
-app.use("/users", userRouter);
+
+// Router to handle books (temp. disabled)
+// app.use("/books", booksRouter);
 /////////////////////////////////////////////////////////////
+
+
+// 
+app.use("/books", BookDetailsController);
+
+
 // Connect to MongoDB
 mongoose
   .connect(mongoDBURL)
