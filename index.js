@@ -23,13 +23,13 @@ app.get("/", (req, res) => {
 /////////////////////////////////////////////////////////////
 
 
-// Router to handle books (temp. disabled)
-// app.use("/books", booksRouter);
+// Router to handle books 
+app.use("/books", booksRouter);
 /////////////////////////////////////////////////////////////
 
 
-// 
-app.use("/books", BookDetailsController);
+// Implments Feature 4: Book Details
+app.use("/bookDetails", BookDetailsController);
 
 
 // Connect to MongoDB

@@ -1,4 +1,6 @@
-// Feature: 
+// Feature Title: Book Details 
+// Feature ID: 4 
+// Assigned to: Justin Rollins 
 
 import mongoose from "mongoose";
 import express from "express";
@@ -7,8 +9,8 @@ import { Book } from "../models/bookModel.js";
 
 const BookDetailsController = express.Router();
 
-// Feature 4.1: Create Book - Given a Book’s information, add it to the system.
-BookDetailsController.post('/', async (req, res) => 
+// Feature 4.1: Create Book - Given a book’s information, adds it to the system.
+BookDetailsController.post('/createBook', async (req, res) => 
 {
     try 
     {
@@ -65,7 +67,7 @@ BookDetailsController.post('/', async (req, res) =>
             price: req.body.price,
             description: req.body.description,
             yearPublished: req.body.yearPublished,
-          };
+        };
 
           const book = await Book.create(newBook);
           return res.status(201).send(book);
