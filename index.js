@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 const PORT = process.env.PORT;
-const mongoDBURL = "mongodb+srv://justinr:dUj4ckiX26ARCyG4@geektext-team-24.zgqn2ve.mongodb.net/?retryWrites=true&w=majority";
+const mongoDBURL = process.env.mongoDB_URL;
 import mongoose from "mongoose";
 import booksRouter from "./routes/booksRouter.js";
 import BookDetailsController from "./controllers/BookDetailsController.js";
