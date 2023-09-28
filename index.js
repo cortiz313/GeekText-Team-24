@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import booksRouter from "./routes/booksRouter.js";
 import BookDetailsController from "./controllers/BookDetailsController.js";
 import BookBrowsingController from "./controllers/bookBrowsingController.js";
+import ProfileManagementController from "./controllers/ProfileManagementController.js";
 
 // Create express app
 const app = express();
@@ -29,6 +30,7 @@ app.use("/books", booksRouter);
 
 // Implements Feature 4: Book Details
 app.use("/bookDetails", BookDetailsController);
+app.use("/user", ProfileManagementController);
 
 // Router to get books by genre
 app.use("/browsing", BookBrowsingController);
