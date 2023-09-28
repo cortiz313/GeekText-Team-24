@@ -1,5 +1,6 @@
 import express from "express";
 import {User} from "../models/userModel.js";
+import { Address } from "../models/addressModel.js";
 
 const ProfileManagementController = express.Router();
 //router for new user
@@ -13,9 +14,9 @@ ProfileManagementController.post('/', async (req, res) => {
         {
             return res.status(400).send("Missing field: password");
         }
-        if (!req.body.confirmedpassword)
+        if (!req.body.confirmPassword)
         {
-            return res.status(400).send("Missing field: confirmpassword ");
+            return res.status(400).send("Missing field: confirmPassword ");
         }
         if (!req.body.name)
         {
@@ -25,21 +26,23 @@ ProfileManagementController.post('/', async (req, res) => {
         {
             return res.status(400).send("Missing field: email ");
         }
-        if (!req.body.address)
+        if (!req.body.homeAddress)
         {
             return res.status(400).send("Missing field: address");
         }
     
   
-      const newUser = {
+      const newUser = new User({
         username: req.body.username,
         password: req.body.password,
-        confirmpassword : req.body.confirmedpassword,
+        confirmPassword : req.body.confirmPassword,
         name: req.body.name,
         email: req.body.email,
-        address: req.body.homeAddress
-      };
+        homeAddress: await Address.create(req.body.homeAddress)
+      });
 
+    
+    
       const user = await User.create(newUser);
       return res.status(201).send(user);
       

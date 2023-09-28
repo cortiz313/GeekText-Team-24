@@ -16,12 +16,7 @@ const addressSchema = mongoose.Schema({
   zipCode: {
     type: Number,
     required: false,
-    validate: {
-      validator: function (zipCode) {
-        return zipCode.length === 5;
-      },
-      message: "Zip code must be 5 numbers",
-    },
+   
   },
 });
 

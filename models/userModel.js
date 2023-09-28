@@ -15,9 +15,9 @@ const userSchema = mongoose.Schema({
     required: true,
     minlength: 5,
   },
-  confirmedPassword: {
+  confirmPassword: {
     type: String,
-    required: [true, "Please retype your password"],
+    required:[true, "Please retype your password"],
     validate: {
       validator: function (retypedPassword) {
         return retypedPassword === this.password;
@@ -42,7 +42,7 @@ const userSchema = mongoose.Schema({
     lowercase: true,
     validate: [validator.isEmail, "Please provide a valid email address."],
   },
-  homeAddress: addressSchema,
+  homeAddress: [addressSchema],
   wishlist: [wishlistSchema],
   creditCards: [creditCardSchema],
   shoppingCart: [String],
