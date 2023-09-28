@@ -1,47 +1,52 @@
-import mongoose from "mongoose";
 import express from "express";
-import { User } from "./models/userModel.js";
-import { Address } from "../models/addressModel.js";
+import {User} from "../models/userModel.js";
 
-
-const router = express.Router();
-
-router.post("/user", async (req, res) => {
+const ProfileManagementController = express.Router();
+//router for new user
+ProfileManagementController.post('/', async (req, res) => {
     try {
-      if (
-        !req.body.username ||
-        !req.body.password ||
-        !req.body.name ||
-        !req.body.email ||
-        !req.body.street||
-        !req.body.city ||
-        !req.body.state ||
-        !req.body.zipcode
-      ) {
-        return res.status(400).send("Missing required fields");
-      }
+        if (!req.body.username)
+        {
+            return res.status(400).send("Missing field: username ");
+        }
+        if (!req.body.password)
+        {
+            return res.status(400).send("Missing field: password");
+        }
+        if (!req.body.confirmedpassword)
+        {
+            return res.status(400).send("Missing field: confirmpassword ");
+        }
+        if (!req.body.name)
+        {
+            return res.status(400).send("Missing field: name ");
+        }
+        if (!req.body.email)
+        {
+            return res.status(400).send("Missing field: email ");
+        }
+        if (!req.body.address)
+        {
+            return res.status(400).send("Missing field: address");
+        }
+    
   
       const newUser = {
         username: req.body.username,
         password: req.body.password,
+        confirmpassword : req.body.confirmedpassword,
         name: req.body.name,
-        email: req.body.email
+        email: req.body.email,
+        address: req.body.homeAddress
       };
 
-      const newAddress ={
-        street: req.body.street,
-        city: req.body.city,
-        state: req.body.state,
-        zipcode: req.body.zipcode
-        
-      }
       const user = await User.create(newUser);
-      const address = await Address.create(newAddress);
-      return res.status(201).send(user,address);
+      return res.status(201).send(user);
       
     } catch (error) {
       console.log(error.message);
       res.status(500).send(`Internal Server Error ${error.message}`);
     }
   });
-export default ProfileManagementController;
+
+  export default ProfileManagementController;
