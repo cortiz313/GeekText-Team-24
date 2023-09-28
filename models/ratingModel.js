@@ -8,13 +8,18 @@ const ratingSchema = mongoose.Schema({
   rating: {
     type: Number,
     required: true,
-    min: 0,
+    min: 1,
     max: 5,
   },
   datestamp: {
     type: Date,
     default: Date.now,
     required: true,
+  },
+  ISBN: {
+    type: Number,
+    required: true,
+    unique: true,
   },
 });
 
