@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
 app.use("/books", booksRouter);
 /////////////////////////////////////////////////////////////
 
-//
+// Implements Feature 4: Book Details
 app.use("/bookDetails", BookDetailsController);
 
 // Router to get books by genre
