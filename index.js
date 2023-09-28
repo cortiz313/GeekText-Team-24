@@ -2,15 +2,14 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 const PORT = process.env.PORT;
-const mongoDBURL = process.env.MONGODB_URL;
+const mongoDBURL = process.env.mongoDB_URL;
 import mongoose from "mongoose";
 import booksRouter from "./routes/booksRouter.js";
+import BookDetailsController from "./controllers/BookDetailsController.js";
 import BookBrowsingController from "./controllers/bookBrowsingController.js";
 
 // Create express app
 const app = express();
-
-// Middleware
 
 // Used to parse JSON from body
 app.use(express.json());
@@ -27,6 +26,9 @@ app.get("/", (req, res) => {
 // Router to handle books
 app.use("/books", booksRouter);
 /////////////////////////////////////////////////////////////
+
+//
+app.use("/bookDetails", BookDetailsController);
 
 // Router to get books by genre
 app.use("/browsing", BookBrowsingController);
