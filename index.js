@@ -6,6 +6,7 @@ const mongoDBURL = "mongodb+srv://root:root@geektext-team-24.zgqn2ve.mongodb.net
 import mongoose from "mongoose";
 import booksRouter from "./routes/booksRouter.js";
 import BookDetailsController from "./controllers/BookDetailsController.js";
+import ProfileManagementController from "./controllers/ProfileManagementController.js";
 
 // Create express app
 const app = express();
@@ -30,6 +31,7 @@ app.get("/", (req, res) => {
 
 // 
 app.use("/books", BookDetailsController);
+app.use("/user", ProfileManagementController);
 
 
 // Connect to MongoDB
