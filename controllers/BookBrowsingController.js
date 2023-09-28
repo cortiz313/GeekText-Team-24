@@ -1,8 +1,27 @@
-import mongoose from "mongoose";
+// Feature #1 Book Browsing and Sorting
 import express from "express";
-import booksRouter from "./routes/booksRouter.js";
-import Book from "./models/bookModel.js";
+import { Book } from "../models/bookModel.js";
+const router = express.Router();
 
-class BookBrowsingController {}
+class BookBrowsingController {
+  // Bullet #1 - Get all books by genre
+  async getBooksByGenre(req, res) {
+    try {
+      const books = await Book.find({ genre: req.params.genre });
+      return res.status(200).json({
+        count: books.length,
+        data: books,
+      });
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).send(`Internal Server Error ${error.message}`);
+    }
+  }
+}
 
-export default BookBrowsingController;
+router.get("/genre/:genre", (req, res) => {
+  const controller = new BookBrowsingController();
+  return controller.getBooksByGenre(req, res);
+});
+
+export default router;
