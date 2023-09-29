@@ -46,7 +46,6 @@ BookDetailsController.post("/createBook", async (req, res) => {
       author = await Author.create({
         firstName: firstName,
         lastName: lastName,
-        // Add any other relevant fields here
       });
     }
 
