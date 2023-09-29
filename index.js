@@ -8,6 +8,7 @@ import booksRouter from "./routes/booksRouter.js";
 import BookDetailsController from "./controllers/BookDetailsController.js";
 import BookBrowsingController from "./controllers/bookBrowsingController.js";
 import ProfileManagementController from "./controllers/ProfileManagementController.js";
+import WishlistManagementController from "./controllers/WishlistManagementController.js";
 
 // Create express app
 const app = express();
@@ -35,6 +36,8 @@ app.use("/user", ProfileManagementController);
 // Router to get books by genre
 app.use("/browsing", BookBrowsingController);
 /////////////////////////////////////////////////////////////
+
+app.use("/wishlist", WishlistManagementController);
 
 // Connect to MongoDB
 mongoose
