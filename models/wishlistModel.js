@@ -15,9 +15,9 @@ const wishlistSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Book",
         required: true,
-      },
-    },
-  ],
+      }
+    }
+  ]
 });
 
 const Wishlist = mongoose.model("Wishlist", wishlistSchema);
