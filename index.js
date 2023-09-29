@@ -6,6 +6,7 @@ const mongoDBURL = process.env.mongoDB_URL;
 import mongoose from "mongoose";
 import booksRouter from "./routes/booksRouter.js";
 import BookDetailsController from "./controllers/BookDetailsController.js";
+import BookRatingController from "./controllers/BookRatingController.js";
 import BookBrowsingController from "./controllers/bookBrowsingController.js";
 import ProfileManagementController from "./controllers/ProfileManagementController.js";
 import WishlistManagementController from "./controllers/WishlistManagementController.js";
@@ -32,6 +33,9 @@ app.use("/books", booksRouter);
 // Implements Feature 4: Book Details
 app.use("/bookDetails", BookDetailsController);
 app.use("/user", ProfileManagementController);
+
+// Router to add rating
+app.use("/rating", BookRatingController);
 
 // Router to get books by genre
 app.use("/browsing", BookBrowsingController);
