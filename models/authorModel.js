@@ -1,24 +1,31 @@
 import mongoose from "mongoose";
+import { bookSchema } from "./bookModel.js";
 
 const authorSchema = mongoose.Schema({
-  firstname: {
+  firstName: {
     type: String,
     required: true,
   },
-  lastname: {
+  lastName: {
     type: String,
     required: true,
   },
   biography: {
     type: String,
     default: "No biography available",
-    required: true,
+    required: false,
   },
   publisher: {
     type: String,
-    required: true,
+    required: false,
   },
+  booksWritten: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Book",
+    },
+  ],
 });
 
 const Author = mongoose.model("Author", authorSchema);
-export { Author };
+export { Author, authorSchema };
