@@ -7,23 +7,35 @@ const BookDetailsController = express.Router();
 
 BookDetailsController.post("/createBook", async (req, res) => {
   try {
-    const requiredFields = [
-      "title",
-      "author", // Assuming req.body.author is an object with firstname and lastname
-      "genre",
-      "copiesSold",
-      "rating",
-      "ISBN",
-      "publisher",
-      "price",
-      "description",
-      "yearPublished",
-    ];
-    const missingFields = requiredFields.filter((field) => !req.body[field]);
-    if (missingFields.length > 0) {
-      return res
-        .status(400)
-        .send(`Missing fields: ${missingFields.join(", ")}`);
+    if (!req.body.title) {
+      return res.status(400).send("Missing field: title ");
+    }
+    if (!req.body.author) {
+      return res.status(400).send("Missing field: author");
+    }
+    if (!req.body.genre) {
+      return res.status(400).send("Missing field: genre ");
+    }
+    if (!req.body.copiesSold) {
+      return res.status(400).send("Missing field: copiesSold ");
+    }
+    if (!req.body.rating) {
+      return res.status(400).send("Missing field: rating ");
+    }
+    if (!req.body.ISBN) {
+      return res.status(400).send("Missing field: ISBN");
+    }
+    if (!req.body.publisher) {
+      return res.status(400).send("Missing field: publisher ");
+    }
+    if (!req.body.price) {
+      return res.status(400).send("Missing field: price ");
+    }
+    if (!req.body.description) {
+      return res.status(400).send("Missing field: description ");
+    }
+    if (!req.body.yearPublished) {
+      return res.status(400).send("Missing field: yearPublished");
     }
 
     const firstName = req.body.author.firstName;
