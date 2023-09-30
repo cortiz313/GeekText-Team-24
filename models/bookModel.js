@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { ratingSchema } from "./ratingModel.js";
 import { commentSchema } from "./commentModel.js";
+import { authorSchema } from "./authorModel.js";
 
 const bookSchema = mongoose.Schema(
   {
@@ -9,8 +10,9 @@ const bookSchema = mongoose.Schema(
       required: true,
     },
     author: {
-      type: String,
-      required: true, // use schema
+      type: { firstName: String, lastName: String },
+      ref: "Author",
+      required: true,
     },
     genre: {
       type: String,

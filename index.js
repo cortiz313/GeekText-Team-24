@@ -2,10 +2,14 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 const PORT = process.env.PORT;
-const mongoDBURL = "mongodb+srv://justinr:dUj4ckiX26ARCyG4@geektext-team-24.zgqn2ve.mongodb.net/?retryWrites=true&w=majority";
+const mongoDBURL = process.env.mongoDB_URL;
 import mongoose from "mongoose";
 import booksRouter from "./routes/booksRouter.js";
 import BookDetailsController from "./controllers/BookDetailsController.js";
+import BookRatingController from "./controllers/BookRatingController.js";
+import BookBrowsingController from "./controllers/bookBrowsingController.js";
+import ProfileManagementController from "./controllers/ProfileManagementController.js";
+import WishlistManagementController from "./controllers/WishlistManagementController.js";
 
 // Create express app
 const app = express();
@@ -22,15 +26,22 @@ app.get("/", (req, res) => {
 });
 /////////////////////////////////////////////////////////////
 
-
-// Router to handle books (temp. disabled)
-// app.use("/books", booksRouter);
+// Router to handle books
+app.use("/books", booksRouter);
 /////////////////////////////////////////////////////////////
 
+// Implements Feature 4: Book Details
+app.use("/bookDetails", BookDetailsController);
+app.use("/user", ProfileManagementController);
 
-// 
-app.use("/books", BookDetailsController);
+// Router to add rating
+app.use("/rating", BookRatingController);
 
+// Router to get books by genre
+app.use("/browsing", BookBrowsingController);
+/////////////////////////////////////////////////////////////
+
+app.use("/wishlist", WishlistManagementController);
 
 // Connect to MongoDB
 mongoose
