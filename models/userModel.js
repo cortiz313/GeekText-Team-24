@@ -3,7 +3,6 @@ import validator from "validator";
 import { wishlistSchema } from "./wishlistModel.js";
 import { addressSchema } from "./addressModel.js";
 import { creditCardSchema } from "./creditCardModel.js";
-import { bookSchema } from "./bookModel.js";
 
 const userSchema = mongoose.Schema({
   username: {
@@ -26,11 +25,6 @@ const userSchema = mongoose.Schema({
       message: "Your passwords are not the same. Please retype password.",
     },
   },
-  userID: {
-    type: String,
-    required: false,
-    unique: true
-  },
   name: {
     firstName: {
       type: String,
@@ -51,7 +45,7 @@ const userSchema = mongoose.Schema({
   homeAddress: addressSchema,
   wishlist: [wishlistSchema],
   creditCards: [creditCardSchema],
-  shoppingCart: [bookSchema],
+  shoppingCart: [String],
 });
 
 const User = mongoose.model("User", userSchema);
