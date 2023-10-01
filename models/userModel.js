@@ -3,6 +3,7 @@ import validator from "validator";
 import { wishlistSchema } from "./wishlistModel.js";
 import { addressSchema } from "./addressModel.js";
 import { creditCardSchema } from "./creditCardModel.js";
+import { bookSchema } from "./bookModel.js";
 
 const userSchema = mongoose.Schema({
   username: {
@@ -45,7 +46,7 @@ const userSchema = mongoose.Schema({
   homeAddress: [addressSchema],
   wishlist: [wishlistSchema],
   creditCards: [creditCardSchema],
-  shoppingCart: [String],
+  shoppingCart: [bookSchema],
 });
 
 const User = mongoose.model("User", userSchema);
