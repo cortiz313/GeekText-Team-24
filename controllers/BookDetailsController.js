@@ -5,36 +5,49 @@ import { Author } from "../models/authorModel.js";
 
 const BookDetailsController = express.Router();
 
-BookDetailsController.post("/createBook", async (req, res) => {
-  try {
-    if (!req.body.title) {
+// Feature 4.1: Create a book given that book's details 
+BookDetailsController.post("/createBook", async (req, res) => 
+{
+  try 
+  {
+    if (!req.body.title) 
+    {
       return res.status(400).send("Missing field: title ");
     }
-    if (!req.body.author) {
+    if (!req.body.author) 
+    {
       return res.status(400).send("Missing field: author");
     }
-    if (!req.body.genre) {
+    if (!req.body.genre) 
+    {
       return res.status(400).send("Missing field: genre ");
     }
-    if (!req.body.copiesSold) {
+    if (!req.body.copiesSold) 
+    {
       return res.status(400).send("Missing field: copiesSold ");
     }
-    if (!req.body.rating) {
+    if (!req.body.rating) 
+    {
       return res.status(400).send("Missing field: rating ");
     }
-    if (!req.body.ISBN) {
+    if (!req.body.ISBN) 
+    {
       return res.status(400).send("Missing field: ISBN");
     }
-    if (!req.body.publisher) {
+    if (!req.body.publisher) 
+    {
       return res.status(400).send("Missing field: publisher ");
     }
-    if (!req.body.price) {
+    if (!req.body.price) 
+    {
       return res.status(400).send("Missing field: price ");
     }
-    if (!req.body.description) {
+    if (!req.body.description) 
+    {
       return res.status(400).send("Missing field: description ");
     }
-    if (!req.body.yearPublished) {
+    if (!req.body.yearPublished) 
+    {
       return res.status(400).send("Missing field: yearPublished");
     }
 
@@ -42,7 +55,8 @@ BookDetailsController.post("/createBook", async (req, res) => {
     const lastName = req.body.author.lastName;
 
     let author = await Author.findOne({ firstName, lastName });
-    if (!author) {
+    if (!author) 
+    {
       author = await Author.create({
         firstName: firstName,
         lastName: lastName,
@@ -69,10 +83,28 @@ BookDetailsController.post("/createBook", async (req, res) => {
     await author.save();
 
     return res.status(201).send(book);
-  } catch (error) {
+  } 
+  catch (error) 
+  {
     console.log(error.message);
     res.status(500).send("Error 500 is " + error.message);
   }
+});
+
+// Feature 4.2: Given a book's ISBN, return the book's details
+BookDetailsController.get("/isbn/:isbn", async (req, res) => 
+{
+    try 
+    {
+      const isbn = parseInt(req.params.isbn);
+      const book = await Book.find({ ISBN: isbn });
+      return res.status(200).json(book);
+    } 
+    catch (error) 
+    {
+      console.log(error.message);
+      res.status(500).send(error.message);
+    }
 });
 
 export default BookDetailsController;
