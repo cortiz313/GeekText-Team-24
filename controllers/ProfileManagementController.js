@@ -53,10 +53,10 @@ ProfileManagementController.post('/', async (req, res) => {
   });
 
 
-  router.get("/user/:user", async (req, res) => {
+  ProfileManagementController.get("/userID/:username", async (req, res) => {
     try {
-      const username = parseInt(req.params.username);
-      const user = await User.find({ username: username });
+      const username = req.params.username;
+      const user = await User.find({username: username });
       return res.status(200).json(user);
     } catch (error) {
       console.log(error.message);
