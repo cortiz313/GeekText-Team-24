@@ -1,11 +1,38 @@
 import mongoose from "mongoose";
 import express from "express";
-import { User } from "./models/userModel.js";
+import { User } from "../models/userModel.js";
 import { Book } from "../models/bookModel.js";
 
-class ShoppingCartController {
-    // 3.1 Retrieve the subtotal price of all items in the user’s shopping cart.
+const ShoppingCartController = express.Router();
 
-}
+  // 3.2 Add a book to the shopping cart.
+  ShoppingCartController.post('/', async (req, res) => {
+    try {
+      
+      const bookId = req.body.bookId;
+      const userId = req.body.userId;
+      
+      // Find user by userID
+      const user = await User.findOne({ username: userId });
+      if(!user) {
+        return res.status(404).json({message: "User not found"});
+      }
+
+      // Find book by bookID
+      const book = await Book.findOne({ ISBN: bookId });
+      if(!book) {
+        return res.status(404).json({message: "Book not found"});
+      }
+
+      // Add book to shopping cart
+      await user.shoppingCart.push(book);
+      await user.save();
+
+      return res.status(200).json({ message: "Book added to shopping cart"});
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).send(`Internal Server Error ${error.message}`);
+    }
+  });
 
 export default ShoppingCartController;
