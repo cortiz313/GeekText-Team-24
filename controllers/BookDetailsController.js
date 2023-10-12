@@ -75,4 +75,14 @@ BookDetailsController.post("/createBook", async (req, res) => {
   }
 });
 
+BookDetailsController.get("/getTopSellers", async (req, res) => {
+  try {
+    const books = await Book.find().sort({ copiesSold: -1 }).limit(10);
+    return res.status(200).send(books);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Error 500 is " + error.message);
+  }
+});
+
 export default BookDetailsController;
