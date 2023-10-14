@@ -25,31 +25,44 @@ WishlistController.get("/", async (req, res) => {
 });
 
 // push to a user's wishlist array
-WishlistController.post('/:username', async (req, res) => {
+WishlistController.post('/:username/:wishlist', async (req, res) => {
   try {
-    // TODO: find out how to check if username parameter is missing
-    if (!req.body.name) {
-      return res.status(400).send("Missing wishlist name");
-    }
-    
     const username = req.params.username;
+    const wishlistParams = req.params.wishlist;
 
-    const userExists = await User.findOneAndUpdate(
-      { username: username },
-      { $push: { "wishlist": { name: req.body.name, items: [] } } },
-    );
+    // Check if a user with the provided username already exists
+    const userExists = await User.findOne({ username: username });
 
-     if (!userExists) {
+    if (!userExists) {
       return res.status(404).json({ message: "User not found" });
     }
-  
 
-    return res.status(200).send({ message: "User's wishlist updated successfully" });
+    // Check if the wishlist name is unique for the user
+    const wishlistExists = userExists.wishlist.some(wishlist => wishlist.name === wishlistParams);
+
+    if (wishlistExists) {
+      return res.status(400).json({ message: "Wishlist with this name already exists for the user" });
+    }
+
+    // Use findOneAndUpdate to create the wishlist for the user
+    const updatedUser = await User.findOneAndUpdate(
+      { username: username },
+      { $push: { wishlist: { name: wishlistParams, items: [] } } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).send({ message: "Created " + wishlistParams + " in " + username + "'s Wishlists" });
   } catch (error) {
     console.log(error.message);
     res.status(500).send(error.message);
   }
 });
+
+
 
 WishlistController.post('/:username/:wishlistName/addbook', async (req, res) => {
   try {
