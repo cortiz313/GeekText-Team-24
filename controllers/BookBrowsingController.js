@@ -17,11 +17,26 @@ class BookBrowsingController {
       res.status(500).send(`Internal Server Error ${error.message}`);
     }
   }
+
+  async getTopSellers(req, res) {
+    try {
+      const books = await Book.find().sort({ copiesSold: -1 }).limit(10);
+      return res.status(200).send(books);
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).send("Error 500 is " + error.message);
+    }
+  }
 }
 
 router.get("/genre/:genre", (req, res) => {
   const controller = new BookBrowsingController();
   return controller.getBooksByGenre(req, res);
+});
+
+router.get("/topSellers", (req, res) => {
+  const controller = new BookBrowsingController();
+  return controller.getTopSellers(req, res);
 });
 
 export default router;
