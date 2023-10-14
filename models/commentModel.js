@@ -14,6 +14,11 @@ const commentSchema = mongoose.Schema({
     default: Date.now,
     required: true,
   },
+  ISBN: {
+    type: Number,
+    required: true,
+    unique: true,
+  },
 });
 
 const Comment = mongoose.model("Comment", commentSchema);
