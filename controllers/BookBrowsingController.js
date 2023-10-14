@@ -21,7 +21,10 @@ class BookBrowsingController {
   async getTopSellers(req, res) {
     try {
       const books = await Book.find().sort({ copiesSold: -1 }).limit(10);
-      return res.status(200).send(books);
+      return res.status(200).json({
+        count: books.length,
+        data: books,
+      });
     } catch (error) {
       console.log(error.message);
       res.status(500).send("Error 500 is " + error.message);
