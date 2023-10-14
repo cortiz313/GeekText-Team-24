@@ -9,8 +9,6 @@ import error from "mongoose/lib/error/index.js";
 const WishlistController = express.Router();
 //Feature 6.1: Create Wishlist for a user with unique name
 
-// TODO: update to get wishlist for a specific user and wishlist name
-// right now, it's returning the wishlists collection
 WishlistController.get("/", async (req, res) => {
   try {
     const wishlists = await Wishlist.find({});
@@ -24,7 +22,7 @@ WishlistController.get("/", async (req, res) => {
   }
 });
 
-// push to a user's wishlist array
+//Create a wishlist under user
 WishlistController.post('/:username/:wishlist', async (req, res) => {
   try {
     const username = req.params.username;
@@ -44,7 +42,7 @@ WishlistController.post('/:username/:wishlist', async (req, res) => {
       return res.status(400).json({ message: "Wishlist with this name already exists for the user" });
     }
 
-    // Use findOneAndUpdate to create the wishlist for the user
+    //Create a wishlist under user if user exists, and wishlist under unique name doesnt exist
     const updatedUser = await User.findOneAndUpdate(
       { username: username },
       { $push: { wishlist: { name: wishlistParams, items: [] } } },
@@ -52,7 +50,7 @@ WishlistController.post('/:username/:wishlist', async (req, res) => {
     );
 
     if (!updatedUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Failed to create wishlist" });
     }
 
     return res.status(200).send({ message: "Created " + wishlistParams + " in " + username + "'s Wishlists" });
@@ -63,7 +61,7 @@ WishlistController.post('/:username/:wishlist', async (req, res) => {
 });
 
 
-
+//Feature 6.2 add books to wishlist
 WishlistController.post('/:username/:wishlistName/addbook', async (req, res) => {
   try {
     if (!req.body.bookId){
@@ -111,9 +109,4 @@ WishlistController.post('/:username/:wishlistName/addbook', async (req, res) => 
     res.status(500).send(error.message);
   }
 });
-
-
-
-
-
 export default WishlistController;
