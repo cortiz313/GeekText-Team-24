@@ -5,6 +5,7 @@ import { Author } from "../models/authorModel.js";
 
 const BookDetailsController = express.Router();
 
+// Feature 4.1: Create a book given that book's details
 BookDetailsController.post("/createBook", async (req, res) => {
   try {
     if (!req.body.title) {
@@ -75,6 +76,28 @@ BookDetailsController.post("/createBook", async (req, res) => {
   }
 });
 
+// Feature 4.2: Given a book's ISBN, return the book's details
+BookDetailsController.get("/isbn/:isbn", async (req, res) => {
+  try {
+    const isbn = parseInt(req.params.isbn);
+    const book = await Book.find({ ISBN: isbn });
+    return res.status(200).json(book);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send(error.message);
+  }
+});
 
+// Feature 4.2: Given a book's ISBN, return the book's details
+BookDetailsController.get("/isbn/:isbn", async (req, res) => {
+  try {
+    const isbn = parseInt(req.params.isbn);
+    const book = await Book.find({ ISBN: isbn });
+    return res.status(200).json(book);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send(error.message);
+  }
+});
 
 export default BookDetailsController;
