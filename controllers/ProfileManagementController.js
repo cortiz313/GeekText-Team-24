@@ -51,6 +51,20 @@ ProfileManagementController.post('/', async (req, res) => {
     }
   });
 
+  ProfileManagementController.get("/userID/:username", async (req, res) => {
+    try {
+      const username = req.params.username;
+      const user = await User.find({username: username });
+      if(user == 0){
+        return res.status(404).json({ message: `User not found!` });
+      }
+      return res.status(200).json(user);
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).send(`Internal Server Error ${error.message}`);
+    }
+
+  });
 
   ProfileManagementController.put("/update/:username", async (req , res) => {
     try{
