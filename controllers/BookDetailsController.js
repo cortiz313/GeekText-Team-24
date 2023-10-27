@@ -88,4 +88,44 @@ BookDetailsController.get("/isbn/:isbn", async (req, res) => {
   }
 });
 
+// Feature 4.3: Create an author given that Author's details
+BookDetailsController.post('/createAuthor', async (req, res) => 
+{
+    try 
+    {
+        if (!req.body.firstName)
+        {
+            return res.status(400).send("Missing field: firstName ");
+        }
+        if (!req.body.lastName)
+        {
+            return res.status(400).send("Missing field: lastName ");
+        }
+        if (!req.body.biography)
+        {
+            return res.status(400).send("Missing field: biography ");
+        }
+        if (!req.body.publisher)
+        {
+            return res.status(400).send("Missing field: publisher ");
+        }
+
+        const newAuthor = 
+        {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            biography: req.body.biography,
+            publisher: req.body.publisher,
+        };
+
+        const author = await Author.create(newAuthor);
+        return res.status(201).send(author);
+    }
+    catch (error)
+    {
+        console.log(error.message);
+        res.status(500).send(error.message);
+    }
+}); 
+
 export default BookDetailsController;
