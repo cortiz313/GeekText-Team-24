@@ -22,9 +22,6 @@ BookDetailsController.post("/createBook", async (req, res) => {
     if (!req.body.copiesSold) {
       return res.status(400).send("Missing field: copiesSold ");
     }
-    if (!req.body.rating) {
-      return res.status(400).send("Missing field: rating ");
-    }
     if (!req.body.ISBN) {
       return res.status(400).send("Missing field: ISBN");
     }
