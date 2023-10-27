@@ -12,12 +12,10 @@ const commentSchema = mongoose.Schema({
   datestamp: {
     type: Date,
     default: Date.now,
-    required: true,
   },
   ISBN: {
     type: Number,
     required: true,
-    unique: true,
   },
 });
 

@@ -10,7 +10,7 @@ const bookSchema = mongoose.Schema(
       required: true,
     },
     author: {
-      type: { firstName: String, lastName: String },
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Author",
       required: true,
     },
@@ -21,12 +21,6 @@ const bookSchema = mongoose.Schema(
     copiesSold: {
       type: Number,
       required: true,
-    },
-    rating: {
-      type: Number,
-      required: true,
-      min: 0,
-      max: 5,
     },
     ISBN: {
       type: Number,
@@ -53,8 +47,8 @@ const bookSchema = mongoose.Schema(
       required: true,
     },
 
-    comments: [commentSchema],
-    ratings: [ratingSchema],
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
+    ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
   },
   {
     timestamps: true,

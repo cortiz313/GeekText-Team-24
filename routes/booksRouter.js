@@ -44,7 +44,10 @@ router.post("/", async (req, res) => {
 // Route to get all books
 router.get("/", async (req, res) => {
   try {
-    const books = await Book.find({});
+    const books = await Book.find({})
+      .populate("ratings")
+      .populate("author")
+      .populate("comments");
     return res.status(200).json({
       count: books.length,
       data: books,

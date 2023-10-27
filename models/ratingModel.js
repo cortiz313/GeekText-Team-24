@@ -14,12 +14,11 @@ const ratingSchema = mongoose.Schema({
   datestamp: {
     type: Date,
     default: Date.now,
-    required: true,
+    required: false,
   },
   ISBN: {
     type: Number,
     required: true,
-    unique: true,
   },
 });
 

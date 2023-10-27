@@ -43,7 +43,7 @@ const userSchema = mongoose.Schema({
     lowercase: true,
     validate: [validator.isEmail, "Please provide a valid email address."],
   },
-  homeAddress: [addressSchema],
+  homeAddress: addressSchema,
   wishlist: [wishlistSchema],
   creditCards: [creditCardSchema],
   shoppingCart: [bookSchema],

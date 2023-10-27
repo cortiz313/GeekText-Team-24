@@ -1,24 +1,20 @@
 import mongoose from "mongoose";
 
+const wishlistItemSchema = mongoose.Schema({
+  bookISBN: {
+    type: Number,
+    required: true,
+  },
+});
+
 const wishlistSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
   },
-  username: {
-    type: String,
-    required: true,
-  },
-  items: [
-    {
-      bookId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Book",
-        required: true,
-      }
-    }
-  ]
+  items: [wishlistItemSchema], // Use the updated schema for items
 });
 
 const Wishlist = mongoose.model("Wishlist", wishlistSchema);
+
 export { Wishlist, wishlistSchema };
