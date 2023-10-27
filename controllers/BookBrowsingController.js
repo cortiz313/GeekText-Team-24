@@ -8,7 +8,9 @@ class BookBrowsingController {
   // Bullet #1 - Get all books by genre
   async getBooksByGenre(req, res) {
     try {
-      const books = await Book.find({ genre: req.params.genre });
+      const books = await Book.find({ genre: req.params.genre }).populate(
+        "ratings"
+      );
       return res.status(200).json({
         count: books.length,
         data: books,
@@ -21,7 +23,10 @@ class BookBrowsingController {
 
   async getTopSellers(req, res) {
     try {
-      const books = await Book.find().sort({ copiesSold: -1 }).limit(10);
+      const books = await Book.find()
+        .sort({ copiesSold: -1 })
+        .limit(10)
+        .populate("ratings");
       return res.status(200).json({
         count: books.length,
         data: books,
@@ -32,43 +37,28 @@ class BookBrowsingController {
     }
   }
 
-  // async getBooksWithRating(req, res) {
-  //   try {
-  //     const rating = req.params.rating;
-
-  //     // get books with rating greater than or equal to the rating passed in the query
-  //     const books = await Book.find({ rating: { $gte: rating } });
-  //     return res.status(200).json({
-  //       count: books.length,
-  //       data: books,
-  //     });
-  //   } catch (error) {
-  //     console.log(error.message);
-  //     res.status(500).send("Error 500 is " + error.message);
-  //   }
-  // }
-
   async getBooksWithRating(req, res) {
     try {
-      const rating = parseFloat(req.params.rating);
+      const minRating = parseFloat(req.params.rating);
 
-      const books = await Book.aggregate([
-        { $match: { "ratings.rating": { $gte: rating } } },
-        { $unwind: "$ratings" },
-        {
-          $group: {
-            _id: "$_id",
-            title: { $first: "$title" },
-            author: { $first: "$author" },
-            averageRating: { $avg: "$ratings.rating" },
-          },
-        },
-        { $match: { averageRating: { $gte: rating } } },
-      ]);
+      if (isNaN(minRating)) {
+        return res.status(400).send("Invalid rating parameter");
+      }
+
+      const books = await Book.find().populate("ratings");
+      const filteredBooks = books.filter((book) => {
+        const totalRating = book.ratings.reduce(
+          (acc, rating) => acc + rating.rating,
+          0
+        );
+        const averageRating =
+          book.ratings.length > 0 ? totalRating / book.ratings.length : 0;
+        return averageRating >= minRating;
+      });
 
       return res.status(200).json({
-        count: books.length,
-        data: books,
+        count: filteredBooks.length,
+        data: filteredBooks,
       });
     } catch (error) {
       console.log(error.message);

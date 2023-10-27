@@ -39,7 +39,9 @@ BookRatingController.post("/", async (req, res) => {
       ISBN: isbn,
     });
 
-    const createdRating = await Rating.create(newRating);
+    const createdRating = await newRating.save();
+    book.ratings.push(createdRating._id);
+    await book.save();
     return res
       .status(201)
       .send({ message: "Rating created successfully!", rating: createdRating });
@@ -82,9 +84,10 @@ BookRatingController.post("/comment", async (req, res) => {
     });
 
     const createdComment = await Comment.create(newComment);
-    return res
-      .status(201)
-      .send({ message: "Comment created successfully!", comment: createdComment });
+    return res.status(201).send({
+      message: "Comment created successfully!",
+      comment: createdComment,
+    });
   } catch (error) {
     console.log(error.message);
     res.status(500).send(error.message);

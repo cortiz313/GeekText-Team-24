@@ -54,7 +54,7 @@ const bookSchema = mongoose.Schema(
     },
 
     comments: [commentSchema],
-    ratings: [ratingSchema],
+    ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
   },
   {
     timestamps: true,
