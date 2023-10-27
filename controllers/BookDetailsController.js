@@ -4,6 +4,7 @@ import { Book } from "../models/bookModel.js";
 import { Author } from "../models/authorModel.js";
 import { Rating } from "../models/ratingModel.js";
 import { Comment } from "../models/commentModel.js";
+import { User } from "../models/userModel.js";
 
 const BookDetailsController = express.Router();
 
@@ -64,23 +65,47 @@ BookDetailsController.post("/createBook", async (req, res) => {
     // Create comments if they are provided
     let commentIds = [];
     if (req.body.comments && Array.isArray(req.body.comments)) {
-      const comments = req.body.comments.map((comment) => ({
-        ...comment,
-        ISBN: req.body.ISBN,
-      }));
-      const createdComments = await Comment.insertMany(comments);
-      commentIds = createdComments.map((comment) => comment._id);
+      for (const comment of req.body.comments) {
+        let user = await User.findOne({ username: comment.username });
+        if (!user) {
+          user = await User.create({
+            username: comment.username,
+            password: "defaultPassword",
+            confirmPassword: "defaultPassword",
+            email: `${comment.username}@example.com`,
+          });
+        }
+        const newComment = new Comment({
+          ...comment,
+          user: user._id,
+          ISBN: req.body.ISBN,
+        });
+        await newComment.save();
+        commentIds.push(newComment._id);
+      }
     }
 
     // Create ratings if they are provided
     let ratingIds = [];
     if (req.body.ratings && Array.isArray(req.body.ratings)) {
-      const ratings = req.body.ratings.map((rating) => ({
-        ...rating,
-        ISBN: req.body.ISBN,
-      }));
-      const createdRatings = await Rating.insertMany(ratings);
-      ratingIds = createdRatings.map((rating) => rating._id);
+      for (const rating of req.body.ratings) {
+        let user = await User.findOne({ username: rating.username });
+        if (!user) {
+          user = await User.create({
+            username: rating.username,
+            password: "defaultPassword",
+            confirmPassword: "defaultPassword",
+            email: `${rating.username}@example.com`,
+          });
+        }
+        const newRating = new Rating({
+          ...rating,
+          user: user._id,
+          ISBN: req.body.ISBN,
+        });
+        await newRating.save();
+        ratingIds.push(newRating._id);
+      }
     }
 
     const bookData = {
