@@ -102,6 +102,10 @@ BookRatingController.get("/comment/:ISBN", async (req, res) => {
     const book = await Book.findOne({ ISBN: req.params.ISBN }).populate(
       "comments"
     );
+
+    if (!book) {
+      return res.status(404).json({ message: `Book not found!` });
+    }
     const comments = book.comments;
     return res.status(200).json({
       count: comments.length,
