@@ -82,9 +82,23 @@ BookRatingController.post("/comment", async (req, res) => {
     });
 
     const createdComment = await Comment.create(newComment);
+
     return res
       .status(201)
       .send({ message: "Comment created successfully!", comment: createdComment });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send(error.message);
+  }
+});
+
+BookRatingController.get("/:ISBN/comment", async (req, res) => {
+  try {
+    const comment = await Book.find({ ISBN: req.params.isbn }).comments;
+      return res.status(200).json({
+        // count: comment.length,
+        data: comment
+      });
   } catch (error) {
     console.log(error.message);
     res.status(500).send(error.message);
