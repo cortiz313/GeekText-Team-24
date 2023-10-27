@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 import booksRouter from "./routes/booksRouter.js";
 import BookDetailsController from "./controllers/BookDetailsController.js";
 import BookRatingController from "./controllers/BookRatingController.js";
-import BookBrowsingController from "./controllers/bookBrowsingController.js";
+import BookBrowsingController from "./controllers/BookBrowsingController.js";
 import ProfileManagementController from "./controllers/ProfileManagementController.js";
 import WishlistManagementController from "./controllers/WishlistManagementController.js";
 import ShoppingCartController from "./controllers/ShoppingCartController.js";
