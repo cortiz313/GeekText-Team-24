@@ -84,26 +84,29 @@ BookRatingController.post("/comment", async (req, res) => {
     });
 
     const createdComment = await Comment.create(newComment);
-
+    book.comments.push(createdComment._id);
+    await book.save();
 
     return res.status(201).send({
       message: "Comment created successfully!",
       comment: createdComment,
     });
-
   } catch (error) {
     console.log(error.message);
     res.status(500).send(error.message);
   }
 });
 
-BookRatingController.get("/:ISBN/comment", async (req, res) => {
+BookRatingController.get("/comment/:ISBN", async (req, res) => {
   try {
-    const comment = await Book.find({ ISBN: req.params.isbn }).comments;
-      return res.status(200).json({
-        // count: comment.length,
-        data: comment
-      });
+    const book = await Book.findOne({ ISBN: req.params.ISBN }).populate(
+      "comments"
+    );
+    const comments = book.comments;
+    return res.status(200).json({
+      count: comments.length,
+      data: comments,
+    });
   } catch (error) {
     console.log(error.message);
     res.status(500).send(error.message);
