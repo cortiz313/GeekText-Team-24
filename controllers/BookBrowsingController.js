@@ -45,7 +45,10 @@ class BookBrowsingController {
         return res.status(400).send("Invalid rating parameter");
       }
 
-      const books = await Book.find().populate("ratings");
+      const books = await Book.find()
+        .populate("ratings")
+        .populate("author")
+        .populate("comments");
       const filteredBooks = books.filter((book) => {
         const totalRating = book.ratings.reduce(
           (acc, rating) => acc + rating.rating,

@@ -174,7 +174,6 @@ BookDetailsController.post("/createAuthor", async (req, res) => {
     if (existingAuthor) {
       return res.status(409).json({
         message: "Author already exists",
-        author: existingAuthor,
       });
     }
 
