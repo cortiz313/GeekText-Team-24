@@ -68,4 +68,80 @@ ProfileManagementController.post('/', async (req, res) => {
 
   });
 
+  
+  ProfileManagementController.put("/update/:username", async (req , res) => {
+    try{
+      const username = req.params.username;
+      const user = await User.findOne({username: username });
+      if(user == 0){
+        return res.status(404).json({ message: `User not found!` });
+      }
+
+      if (req.body.username)
+      {
+        user.username = req.body.username;
+      }
+      if (req.body.password)
+      {
+        user.password = req.body.password;
+      }
+      if (req.body.confirmPassword)
+      {
+        user.confirmPassword = req.body.confirmPassword;
+      }
+      if (req.body.name)
+      {
+        user.name = req.body.name;
+      }
+      if (req.body.homeAddress)
+      {
+        user.homeAddress = await Address.create(req.body.homeAddress);;
+      }
+      await user.save();
+      return res.status(201).send(user);
+
+    }catch(error){
+      console.log(error.message);
+      res.status(500).send(`Internal Server Error ${error.message}`);
+    }
+  });
+
+  ProfileManagementController.patch("/update/:username", async (req , res) => {
+    try{
+      const username = req.params.username;
+      const user = await User.findOne({username: username });
+      if(user == 0){
+        return res.status(404).json({ message: `User not found!` });
+      }
+
+      if (req.body.username)
+      {
+        user.username = req.body.username;
+      }
+      if (req.body.password)
+      {
+        user.password = req.body.password;
+      }
+      if (req.body.confirmPassword)
+      {
+        user.confirmPassword = req.body.confirmPassword;
+      }
+      if (req.body.name)
+      {
+        user.name = req.body.name;
+      }
+      if (req.body.homeAddress)
+      {
+        user.homeAddress = await Address.create(req.body.homeAddress);;
+      }
+      await user.save();
+      return res.status(201).send(user);
+
+    }catch(error){
+      console.log(error.message);
+      res.status(500).send(`Internal Server Error ${error.message}`);
+    }
+  });
+
+
   export default ProfileManagementController;

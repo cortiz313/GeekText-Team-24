@@ -33,6 +33,8 @@ app.use("/books", booksRouter);
 
 // Implements Feature 4: Book Details
 app.use("/bookDetails", BookDetailsController);
+
+// Router to User
 app.use("/user", ProfileManagementController);
 
 // Router to add rating
