@@ -96,7 +96,7 @@ ProfileManagementController.post('/', async (req, res) => {
       }
       if (req.body.homeAddress)
       {
-        user.homeAddress = await Address.create(req.body.homeAddress);;
+        user.homeAddress = await Address.create(req.body.homeAddress);
       }
       await user.save();
       return res.status(201).send(user);
@@ -133,7 +133,7 @@ ProfileManagementController.post('/', async (req, res) => {
       }
       if (req.body.homeAddress)
       {
-        user.homeAddress = await Address.create(req.body.homeAddress);;
+        user.homeAddress = await Address.create(req.body.homeAddress);
       }
       await user.save();
       return res.status(201).send(user);
@@ -185,7 +185,7 @@ ProfileManagementController.post('/', async (req, res) => {
     
     
       const card = await CreditCard.create(newCard);
-      await updatedUser.creditCard.push(card);
+      await updatedUser.creditCards.push(card);
       return res.status(201).send({message: "Credit Card added to user"});
       
       
