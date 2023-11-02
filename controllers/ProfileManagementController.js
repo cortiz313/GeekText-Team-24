@@ -1,6 +1,7 @@
 import express from "express";
 import {User} from "../models/userModel.js";
 import { Address } from "../models/addressModel.js";
+import { CreditCard } from "../models/creditCardModel.js";
 
 const ProfileManagementController = express.Router();
 //router for new user
@@ -142,6 +143,40 @@ ProfileManagementController.post('/', async (req, res) => {
       res.status(500).send(`Internal Server Error ${error.message}`);
     }
   });
+
+  ProfileManagementController.post('/credit', async (req, res) => {
+    try {
+        if (!req.body.creditCardNumber)
+        {
+            return res.status(400).send("Missing field: credit card number");
+        }
+        if (!req.body.securityCode)
+        {
+            return res.status(400).send("Missing field: security code");
+        }
+        if (!req.body.expirationDate)
+        {
+            return res.status(400).send("Missing field: expiration date ");
+        }
+        
+  
+      const newCard = new CreditCard({
+        creditCardNumber: req.body.creditCardNumber,
+        securityCode: req.body.securityCode,
+        expirationDate: req.body.expirationDate
+      });
+
+    
+    
+      const card = await CreditCard.create(newCard);
+      return res.status(201).send(card);
+      
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).send(`Internal Server Error ${error.message}`);
+    }
+  });
+
 
 
   export default ProfileManagementController;
