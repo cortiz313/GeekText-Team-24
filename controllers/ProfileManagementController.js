@@ -147,8 +147,11 @@ ProfileManagementController.post('/', async (req, res) => {
   ProfileManagementController.post('/credit', async (req, res) => {
     try {
       const username = req.params.username;
+      const cardName = req.params.creditCard;
       const user = await User.find({username: username });
-
+      if(user == 0){
+        return res.status(404).json({ message: `User not found!` });
+      }
      
 
         if (!req.body.creditCardNumber)
@@ -170,6 +173,12 @@ ProfileManagementController.post('/', async (req, res) => {
         securityCode: req.body.securityCode,
         expirationDate: req.body.expirationDate
       });
+
+      const updatedUser = await User.findOneAndUpdate(
+        { username: username },
+        { $push: { wishlist: { name: cardName, card: [] } } },
+        { new: true }
+      );
 
 
 
