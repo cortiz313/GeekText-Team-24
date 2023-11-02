@@ -146,6 +146,14 @@ ProfileManagementController.post('/', async (req, res) => {
 
   ProfileManagementController.post('/credit', async (req, res) => {
     try {
+      const username = req.params.username;
+      const user = await User.find({username: username });
+
+      if (req.body.username)
+      {
+        user.username = req.body.username;
+      }
+
         if (!req.body.creditCardNumber)
         {
             return res.status(400).send("Missing field: credit card number");
@@ -166,10 +174,15 @@ ProfileManagementController.post('/', async (req, res) => {
         expirationDate: req.body.expirationDate
       });
 
+
+
     
     
       const card = await CreditCard.create(newCard);
-      return res.status(201).send(card);
+      await user.save();
+      return res.status(201).send(user,card);
+      
+      
       
     } catch (error) {
       console.log(error.message);
