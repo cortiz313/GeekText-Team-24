@@ -149,7 +149,7 @@ ProfileManagementController.post('/', async (req, res) => {
       const username = req.params.username;
       const creditCards = req.params.creditCard;
       const user = await User.find({username: username });
-      if(user == 0){
+      if(!user){
         return res.status(404).json({ message: `User not found!` });
       }
      
@@ -176,7 +176,7 @@ ProfileManagementController.post('/', async (req, res) => {
 
       const updatedUser = await User.findOneAndUpdate(
         { username: username },
-        { $push: { creditCards: {card: [newCard] } } },
+        { $push: { creditCards: {card: [] } } },
         { new: true }
       );
 
@@ -185,7 +185,7 @@ ProfileManagementController.post('/', async (req, res) => {
     
     
       const card = await CreditCard.create(newCard);
-      await user.creditCard.push(card);
+      await updatedUser.creditCard.push(card);
       return res.status(201).send({message: "Credit Card added to user"});
       
       
