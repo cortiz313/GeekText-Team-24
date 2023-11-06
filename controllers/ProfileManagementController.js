@@ -146,34 +146,40 @@ ProfileManagementController.post('/', async (req, res) => {
 
   ProfileManagementController.post('/credit', async (req, res) => {
     try {
-      const {username} = req.body;
+      const username = req.body;
       const user = await User.find({username: username });
-      const creditCards = req.params.creditCard;
+     
       
       if(!user){
         return res.status(404).json({ message: `User not found!` });
       }
+
+      const creditCardNumber = req.body;
+      const securityCode = req.body;
+      const expirationDate = req.body;
      
 
-        if (!req.body.creditCardNumber)
+        if (!creditCardNumber)
         {
             return res.status(400).send("Missing field: credit card number");
         }
-        if (!req.body.securityCode)
+        if (!securityCode)
         {
             return res.status(400).send("Missing field: security code");
         }
-        if (!req.body.expirationDate)
+        if (!expirationDate)
         {
             return res.status(400).send("Missing field: expiration date ");
         }
         
   
       const newCard = new CreditCard({
-        creditCardNumber: req.body.creditCardNumber,
-        securityCode: req.body.securityCode,
-        expirationDate: req.body.expirationDate
+        creditCardNumber: creditCardNumber,
+        securityCode: securityCode,
+        expirationDate: expirationDate
       });
+
+      const card = await CreditCard.create(newCard);
 
       const updatedUser = await User.findOneAndUpdate(
         { username: username },
@@ -185,7 +191,7 @@ ProfileManagementController.post('/', async (req, res) => {
 
     
     
-      const card = await CreditCard.create(newCard);
+      
       await updatedUser.creditCards.push(card);
       return res.status(201).send({message: "Credit Card added to user"});
       
