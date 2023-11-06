@@ -147,7 +147,7 @@ ProfileManagementController.post('/', async (req, res) => {
   ProfileManagementController.post('/credit', async (req, res) => {
     try {
       const username = req.body;
-      const user = await User.find({username: username });
+      const user = await User.findOne({username: username });
      
       
       if(!user){
@@ -180,19 +180,9 @@ ProfileManagementController.post('/', async (req, res) => {
       });
 
       const card = await CreditCard.create(newCard);
-
-      const updatedUser = await User.findOneAndUpdate(
-        { username: username },
-        { $push: { creditCards: {card: [] } } },
-        { new: true }
-      );
-
-
-
-    
-    
       
-      await updatedUser.creditCards.push(card);
+       user.creditCards.push(card);
+       await user.save();
       return res.status(201).send({message: "Credit Card added to user"});
       
       
