@@ -146,9 +146,10 @@ ProfileManagementController.post('/', async (req, res) => {
 
   ProfileManagementController.post('/credit', async (req, res) => {
     try {
-      const username = req.params.username;
-      const creditCards = req.params.creditCard;
+      const {username} = req.body;
       const user = await User.find({username: username });
+      const creditCards = req.params.creditCard;
+      
       if(!user){
         return res.status(404).json({ message: `User not found!` });
       }
