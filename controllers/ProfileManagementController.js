@@ -96,7 +96,7 @@ ProfileManagementController.post('/', async (req, res) => {
       }
       if (req.body.homeAddress)
       {
-        user.homeAddress = await Address.create(req.body.homeAddress);
+        user.homeAddress = await Address.create(req.body.homeAddress);;
       }
       await user.save();
       return res.status(201).send(user);
@@ -133,7 +133,7 @@ ProfileManagementController.post('/', async (req, res) => {
       }
       if (req.body.homeAddress)
       {
-        user.homeAddress = await Address.create(req.body.homeAddress);
+        user.homeAddress = await Address.create(req.body.homeAddress);;
       }
       await user.save();
       return res.status(201).send(user);
@@ -146,7 +146,7 @@ ProfileManagementController.post('/', async (req, res) => {
 
   ProfileManagementController.post('/credit', async (req, res) => {
     try {
-      const username = req.body;
+      const {username} = req.body;
       const user = await User.findOne({username: username });
      
       
@@ -154,9 +154,9 @@ ProfileManagementController.post('/', async (req, res) => {
         return res.status(404).json({ message: `User not found!` });
       }
 
-      const creditCardNumber = req.body;
-      const securityCode = req.body;
-      const expirationDate = req.body;
+      const {creditCardNumber} = req.body;
+      const {securityCode} = req.body;
+      const {expirationDate} = req.body;
      
 
         if (!creditCardNumber)
@@ -181,8 +181,8 @@ ProfileManagementController.post('/', async (req, res) => {
 
       const card = await CreditCard.create(newCard);
       
-       user.creditCards.push(card);
-       await user.save();
+     user.creditCards.push(card);
+      await user.save();
       return res.status(201).send({message: "Credit Card added to user"});
       
       
