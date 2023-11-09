@@ -149,4 +149,34 @@ WishlistController.delete('/:username/:wishlistName/shoppingCart', async (req, r
   }
 });
 
+//Feature 6.4 List all books from a user wishlist.
+WishlistController.get('/:username/:wishlistName', async (req, res) => {
+  try{
+    const usernameParam = req.params.username;
+    const wishlistParam = req.params.wishlistName;
+
+    // Find the user
+    const userExists = await User.findOne({ username: usernameParam });
+    if (!userExists) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Find the user's Wishlist
+    const wishlistExists = userExists.wishlist.find((wish) => wish.name === wishlistParam);
+
+    if (!wishlistExists) {
+      return res.status(404).json({ message: 'Wishlist not found for the user' });
+    }
+
+    let wishlistBooks = wishlistExists.items
+    return res.status(200).json({ message: wishlistBooks });
+
+
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send(`Internal Server Error ${error.message}`);
+  }
+
+})
+
 export default WishlistController;
