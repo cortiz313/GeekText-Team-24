@@ -68,6 +68,44 @@ class BookBrowsingController {
       res.status(500).send("Error 500 is " + error.message);
     }
   }
+
+  async discountBooksByPublisher(req, res) {
+    try {
+      const publisher = req.body.publisher;
+      const discount = parseFloat(req.body.discount);
+
+      // Check if discount is a number and within the range of 0 to 1
+      if (isNaN(discount) || discount < 0 || discount > 1) {
+        return res
+          .status(400)
+          .send("Invalid discount parameter: must be between 0 and 1");
+      }
+
+      const books = await Book.find({ publisher: publisher });
+
+      // Check if any books were found
+      if (books.length === 0) {
+        return res
+          .status(404)
+          .send(`No books found for publisher: ${publisher}`);
+      }
+
+      const updatedBooks = books.map((book) => {
+        book.price = parseFloat((book.price * (1 - discount)).toFixed(2));
+        book.save();
+        return book;
+      });
+
+      return res.status(200).json({
+        message: "Books updated successfully!",
+        count: updatedBooks.length,
+        data: updatedBooks,
+      });
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).send("Error 500 is " + error.message);
+    }
+  }
 }
 
 router.get("/genre/:genre", (req, res) => {
@@ -83,6 +121,11 @@ router.get("/topSellers", (req, res) => {
 router.get("/getBooksWithRating/:rating", (req, res) => {
   const controller = new BookBrowsingController();
   return controller.getBooksWithRating(req, res);
+});
+
+router.put("/discountByPublisher", (req, res) => {
+  const controller = new BookBrowsingController();
+  return controller.discountBooksByPublisher(req, res);
 });
 
 export default router;
