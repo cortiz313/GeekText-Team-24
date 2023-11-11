@@ -1,6 +1,7 @@
 import express from "express";
 import {User} from "../models/userModel.js";
 import { Address } from "../models/addressModel.js";
+import { CreditCard } from "../models/creditCardModel.js";
 
 const ProfileManagementController = express.Router();
 //router for new user
@@ -142,6 +143,56 @@ ProfileManagementController.post('/', async (req, res) => {
       res.status(500).send(`Internal Server Error ${error.message}`);
     }
   });
+
+  ProfileManagementController.post('/credit', async (req, res) => {
+    try {
+      const {username} = req.body;
+      const user = await User.findOne({username: username });
+     
+      
+      if(!user){
+        return res.status(404).json({ message: `User not found!` });
+      }
+
+      const {creditCardNumber} = req.body;
+      const {securityCode} = req.body;
+      const {expirationDate} = req.body;
+     
+
+        if (!creditCardNumber)
+        {
+            return res.status(400).send("Missing field: credit card number");
+        }
+        if (!securityCode)
+        {
+            return res.status(400).send("Missing field: security code");
+        }
+        if (!expirationDate)
+        {
+            return res.status(400).send("Missing field: expiration date ");
+        }
+        
+  
+      const newCard = new CreditCard({
+        creditCardNumber: creditCardNumber,
+        securityCode: securityCode,
+        expirationDate: expirationDate
+      });
+
+      const card = await CreditCard.create(newCard);
+      
+     user.creditCards.push(card);
+      await user.save();
+      return res.status(201).send({message: "Credit Card added to user"});
+      
+      
+      
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).send(`Internal Server Error ${error.message}`);
+    }
+  });
+
 
 
   export default ProfileManagementController;
