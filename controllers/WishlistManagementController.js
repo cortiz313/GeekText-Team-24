@@ -5,7 +5,7 @@ import { Book } from "../models/bookModel.js";
 import { Wishlist, wishlistSchema } from "../models/wishlistModel.js";
 import error from "mongoose/lib/error/index.js";
 
-//Feature 6:
+//Feature 6
 const WishlistController = express.Router();
 
 WishlistController.get("/", async (req, res) => {
@@ -20,6 +20,8 @@ WishlistController.get("/", async (req, res) => {
     res.status(500).send(`Internal Server Error ${error.message}`);
   }
 });
+
+//feature 6.1 Create wishlist under a user's wishlist array
 
 WishlistController.post('/:username/:wishlist', async (req, res) => {
   try {
@@ -54,6 +56,8 @@ WishlistController.post('/:username/:wishlist', async (req, res) => {
     res.status(500).send(error.message);
   }
 });
+
+//Feature 6.2: add books to user wishlist
 
 WishlistController.post('/:username/:wishlistName/addbook', async (req, res) => {
   try {
@@ -95,6 +99,8 @@ WishlistController.post('/:username/:wishlistName/addbook', async (req, res) => 
   }
 });
 
+//feature 6.3: remove book from wishlist and add to user shopping cart
+
 WishlistController.delete('/:username/:wishlistName/shoppingCart', async (req, res) => {
   try {
     if (!req.body.bookISBN) {
@@ -129,7 +135,7 @@ WishlistController.delete('/:username/:wishlistName/shoppingCart', async (req, r
       return res.status(404).json({ message: 'Book not found' });
     }
 
-    userExists.shoppingCart.push(book._id);
+    userExists.shoppingCart.push(book);
     await userExists.save();
 
     return res.status(200).json({ message: 'Book removed from ' + usernameParam + "'s wishlist and added to Shopping cart" });
@@ -138,6 +144,8 @@ WishlistController.delete('/:username/:wishlistName/shoppingCart', async (req, r
     res.status(500).send(error.message);
   }
 });
+
+//feature 6.4: list all books in a user wishlist
 
 WishlistController.get('/:username/:wishlistName', async (req, res) => {
   try {
