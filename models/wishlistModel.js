@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const wishlistItemSchema = mongoose.Schema({
   bookISBN: {
-    type: Number,
+    type: String,
     required: true,
   },
 });
