@@ -7,6 +7,7 @@ import { Comment } from "../models/commentModel.js";
 
 const BookRatingController = express.Router();
 
+// Create a rating for a book given by a user.
 BookRatingController.post("/", async (req, res) => {
   try {
     if (!req.body.username) {
@@ -51,6 +52,7 @@ BookRatingController.post("/", async (req, res) => {
   }
 });
 
+// Create a comment for a book given by a user.
 BookRatingController.post("/comment", async (req, res) => {
   try {
     if (!req.body.username) {
@@ -97,6 +99,7 @@ BookRatingController.post("/comment", async (req, res) => {
   }
 });
 
+// Retrieve a list of comments for the book.
 BookRatingController.get("/comment/:ISBN", async (req, res) => {
   try {
     const book = await Book.findOne({ ISBN: req.params.ISBN }).populate(
@@ -106,10 +109,41 @@ BookRatingController.get("/comment/:ISBN", async (req, res) => {
     if (!book) {
       return res.status(404).json({ message: `Book not found!` });
     }
+
     const comments = book.comments;
     return res.status(200).json({
       count: comments.length,
       data: comments,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send(error.message);
+  }
+});
+
+// Given a book Id, calculate the average rating as a decimal.
+BookRatingController.get("/:ISBN", async (req, res) => {
+  try {
+    const book = await Book.findOne({ ISBN: req.params.ISBN }).populate(
+      "ratings"
+    );
+
+    if (!book) {
+      return res.status(404).json({ message: `Book not found!` });
+    }
+
+    if (!Rating || Rating.length === 0) {
+      return 0; // Default to 0 if no ratings are found
+    }
+
+    const totalRating = book.ratings.reduce(
+      (acc, rating) => acc + rating.rating,
+      0
+    );
+    const averageRating = book.ratings.length > 0 ? totalRating / book.ratings.length : 0;
+
+    return res.status(200).json({
+      average: averageRating,
     });
   } catch (error) {
     console.log(error.message);
