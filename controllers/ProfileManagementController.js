@@ -181,7 +181,7 @@ ProfileManagementController.post('/', async (req, res) => {
 
       const card = await CreditCard.create(newCard);
       
-     user.creditCards.push(card);
+      user.creditCards.push(card);
       await user.save();
       return res.status(201).send({message: "Credit Card added to user"});
       
