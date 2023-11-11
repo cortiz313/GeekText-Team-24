@@ -5,8 +5,9 @@ import { Book } from "../models/bookModel.js";
 import { Wishlist, wishlistSchema } from "../models/wishlistModel.js";
 import error from "mongoose/lib/error/index.js";
 
-//Feature 6:
+//Feature 6
 const WishlistController = express.Router();
+
 WishlistController.get("/", async (req, res) => {
   try {
     const wishlists = await Wishlist.find({});
@@ -20,27 +21,25 @@ WishlistController.get("/", async (req, res) => {
   }
 });
 
-//Feature 6.1: Create Wishlist for a user with unique name
+//feature 6.1 Create wishlist under a user's wishlist array
+
 WishlistController.post('/:username/:wishlist', async (req, res) => {
   try {
     const username = req.params.username;
     const wishlistParams = req.params.wishlist;
 
-    // Check if a user with the provided username already exists
     const userExists = await User.findOne({ username: username });
 
     if (!userExists) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if the wishlist name is unique for the user
     const wishlistExists = userExists.wishlist.some(wishlist => wishlist.name === wishlistParams);
 
     if (wishlistExists) {
       return res.status(400).json({ message: "Wishlist with this name already exists for the user" });
     }
 
-    //Create a wishlist under user if user exists, and wishlist under unique name doesnt exist
     const updatedUser = await User.findOneAndUpdate(
       { username: username },
       { $push: { wishlist: { name: wishlistParams, items: [] } } },
@@ -58,7 +57,8 @@ WishlistController.post('/:username/:wishlist', async (req, res) => {
   }
 });
 
-//Feature 6.2 add books to wishlist
+//Feature 6.2: add books to user wishlist
+
 WishlistController.post('/:username/:wishlistName/addbook', async (req, res) => {
   try {
     if (!req.body.bookISBN) {
@@ -69,26 +69,27 @@ WishlistController.post('/:username/:wishlistName/addbook', async (req, res) => 
     const wishlistParam = req.params.wishlistName;
     const bookISBN = req.body.bookISBN;
 
-    // Find the user
     const userExists = await User.findOne({ username: usernameParam });
     if (!userExists) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Find the user's Wishlist
     const wishlistExists = userExists.wishlist.find(wish => wish.name === wishlistParam);
 
     if (!wishlistExists) {
       return res.status(404).json({ message: "Wishlist not found for the user" });
     }
 
-    // Check if the bookISBN is already in the wishlist
-    if (wishlistExists.items.some(item => item.bookISBN.toString() === bookISBN.toString())) {
+    if (wishlistExists.items.some(item => item.bookISBN === bookISBN)) {
       return res.status(400).json({ message: "Book is already in the wishlist" });
     }
 
-    // Add the book to the wishlist
-    wishlistExists.items.push({ bookISBN: bookISBN });
+    const book = await Book.findOne({ ISBN: bookISBN });
+    if (!book) {
+      return res.status(404).json({ message: 'Book not found' });
+    }
+
+    wishlistExists.items.push({ bookISBN: bookISBN, book: book._id });
     await userExists.save();
 
     return res.status(200).json({ message: "Book added to " + usernameParam + "'s wishlist successfully" });
@@ -98,7 +99,8 @@ WishlistController.post('/:username/:wishlistName/addbook', async (req, res) => 
   }
 });
 
-//Feature 6.3 Remove book from user wishlist and add to shopping cart.
+//feature 6.3: remove book from wishlist and add to user shopping cart
+
 WishlistController.delete('/:username/:wishlistName/shoppingCart', async (req, res) => {
   try {
     if (!req.body.bookISBN) {
@@ -109,36 +111,30 @@ WishlistController.delete('/:username/:wishlistName/shoppingCart', async (req, r
     const wishlistParam = req.params.wishlistName;
     const bookISBN = req.body.bookISBN;
 
-    // Find the user
     const userExists = await User.findOne({ username: usernameParam });
     if (!userExists) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Find the user's Wishlist
     const wishlistExists = userExists.wishlist.find((wish) => wish.name === wishlistParam);
 
     if (!wishlistExists) {
       return res.status(404).json({ message: 'Wishlist not found for the user' });
     }
 
-    // Check if the bookISBN is not in the wishlist
-    const bookInWishlist = wishlistExists.items.find((item) => item.bookISBN.toString() === bookISBN.toString());
+    const bookInWishlist = wishlistExists.items.find((item) => item.bookISBN === bookISBN);
     if (!bookInWishlist) {
       return res.status(400).json({ message: 'Book is not in the wishlist' });
     }
 
-    // Remove the book from the wishlist
-    wishlistExists.items = wishlistExists.items.filter((item) => item.bookISBN.toString() !== bookISBN.toString());
+    wishlistExists.items = wishlistExists.items.filter((item) => item.bookISBN !== bookISBN);
     await userExists.save();
 
-    // Find the book by ISBN
     const book = await Book.findOne({ ISBN: bookISBN });
     if (!book) {
       return res.status(404).json({ message: 'Book not found' });
     }
 
-    // Add the book to the shopping cart
     userExists.shoppingCart.push(book);
     await userExists.save();
 
@@ -146,6 +142,33 @@ WishlistController.delete('/:username/:wishlistName/shoppingCart', async (req, r
   } catch (error) {
     console.log(error.message);
     res.status(500).send(error.message);
+  }
+});
+
+//feature 6.4: list all books in a user wishlist
+
+WishlistController.get('/:username/:wishlistName', async (req, res) => {
+  try {
+    const usernameParam = req.params.username;
+    const wishlistParam = req.params.wishlistName;
+
+    const userExists = await User.findOne({ username: usernameParam });
+    if (!userExists) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const wishlistExists = userExists.wishlist.find((wish) => wish.name === wishlistParam);
+
+    if (!wishlistExists) {
+      return res.status(404).json({ message: 'Wishlist not found for the user' });
+    }
+
+    let wishlistBooks = wishlistExists.items;
+    return res.status(200).json({ message: wishlistBooks });
+
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send(`Internal Server Error ${error.message}`);
   }
 });
 
