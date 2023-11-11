@@ -193,4 +193,22 @@ BookDetailsController.post("/createAuthor", async (req, res) => {
   }
 });
 
+// Feature 4.4: Retrieve a list of books associated with an author
+BookDetailsController.get("/authorID/:authorID", async (req, res) => {
+  try {
+    const author = await Author.findById(req.params.authorID);
+    const bookArray = [];
+
+    for (let i = 0; i < author.__v; i++) {
+      let book = await Book.findById(author.booksWritten[i]);
+      bookArray.push(book);
+    }
+    
+    return res.status(200).json(bookArray);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send(error.message);
+  }
+});
+
 export default BookDetailsController;
