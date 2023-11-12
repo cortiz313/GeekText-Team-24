@@ -4,6 +4,8 @@ import { User } from "../models/userModel.js";
 import { Book } from "../models/bookModel.js";
 
 const ShoppingCartController = express.Router();
+// This class is responsible for posting, deleting, and getting information about the User
+// Model's shopping cart array.
 
 // 3.1 Retrieve the subtotal price of all items in the user’s shopping cart.
 ShoppingCartController.get("/subtotal", async (req, res) => {
