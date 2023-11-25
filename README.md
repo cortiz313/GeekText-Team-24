@@ -1,5 +1,4 @@
 # GeekText-Team-24 Bookstore Project
-Overview
 This Bookstore Project is an advanced web-based platform for managing books, user profiles, shopping carts, and wishlists. It features robust functionalities for browsing, sorting, managing user profiles, shopping carts, book details, ratings, comments, and wishlists.
 
 ## Key Features
